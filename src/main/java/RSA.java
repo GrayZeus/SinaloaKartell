@@ -25,7 +25,7 @@ public class RSA implements IRSA {
     }
 
     private BigInteger internalEncrypt(BigInteger message, RSAKey key) {
-        return message.modPow(key.part02(), key.part01());
+        return message.modPow(key.part02(), key.n());
     }
 
     @Override
