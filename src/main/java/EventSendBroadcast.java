@@ -1,6 +1,11 @@
 public class EventSendBroadcast {
+    private byte[] message;
 
-    public String toString() {
-        return "TEXT";
+    public EventSendBroadcast(byte[] message) {
+        this.message = message;
+    }
+
+    public byte[] getMessage() {
+        return message;
     }
 }

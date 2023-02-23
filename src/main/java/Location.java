@@ -4,13 +4,11 @@ import java.lang.reflect.Method;
 
 public class Location extends Subscriber{
 
-    private String key;
+    private RSAKey privateKey;
     private String deliveryRequired = "LOCATIONX" +  "XREQUESTXONEHUNDREDX";
 
-    public Location(String number) {
-        super();
-
-
+    public Location(String locationID, RSAKey privateKey) {
+        this.privateKey = privateKey;
 
     }
 
