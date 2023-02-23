@@ -7,8 +7,8 @@ public class Location extends Subscriber{
     private String key;
     private String deliveryRequired = "LOCATION " + id + " XREQUESTXONEHUNDREDX";
 
-    public Location(int id) {
-        super(id);
+    public Location() {
+
     }
 
         @Subscribe
