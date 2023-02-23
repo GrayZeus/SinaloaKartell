@@ -5,15 +5,28 @@ import java.util.List;
 public class RSACracker {
     private final BigInteger e;
     private final BigInteger n;
-    private final BigInteger cipher;
+    private final BigInteger d;
 
-    public RSACracker(BigInteger e, BigInteger n, BigInteger cipher) {
-        this.e = e;
-        this.n = n;
-        this.cipher = cipher;
+    public RSACracker(BigInteger e, BigInteger n) {
+        BigInteger assignToE = null;
+        BigInteger assignToN = null;
+        BigInteger assignToD = null;
+
+        try {
+            assignToE = e;
+            assignToN = n;
+            assignToD = calculateD();
+        }
+        catch (Exception exception) {
+            exception.printStackTrace();
+        }
+
+        this.e = assignToE;
+        this.n = assignToN;
+        this.d = assignToD;
     }
 
-    public BigInteger execute() throws RSACrackerException {
+    private BigInteger calculateD() throws RSACrackerException {
         BigInteger p, q, d;
         List<BigInteger> factorList = factorize(n);
 
@@ -25,6 +38,11 @@ public class RSACracker {
         q = factorList.get(1);
         BigInteger phi = (p.subtract(BigInteger.ONE)).multiply(q.subtract(BigInteger.ONE));
         d = e.modInverse(phi);
+
+        return d;
+    }
+
+    public BigInteger execute(BigInteger cipher) throws RSACrackerException {
         return cipher.modPow(d, n);
     }
 
