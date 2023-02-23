@@ -89,6 +89,48 @@ public class Vigenere  {
         integerToCharacterMap.put(24, 'Y');
         integerToCharacterMap.put(25, 'Z');
     }
+    public static String execute(String plainMessage, boolean encrypt) {
+        plainMessage = plainMessage.replace(" ", "");
+        char[] characterArray = plainMessage.toCharArray();
+        int[] integerArray = convertTextToIntegerArray(plainMessage.replace(" ", ""));
+        int[] keyIntegerArray = convertTextToIntegerArray(key.replace(" ", ""));
+
+        int keyIndex = 0;
+        for (int i = 0; i < characterArray.length; i++) {
+            int temp;
+            if (encrypt) {
+                temp = (integerArray[i] + keyIntegerArray[keyIndex]) % 26;
+            } else {
+                temp = (integerArray[i] - keyIntegerArray[keyIndex]) % 26;
+            }
+
+            if (temp < 0) {
+                temp += 26;
+            }
+
+            char replacementChar = integerToCharacterMap.get(temp);
+            characterArray[i] = replacementChar;
+
+            keyIndex++;
+            if (keyIndex >= key.length()) {
+                keyIndex = 0;
+            }
+        }
+
+        return String.valueOf(characterArray);
+    }
+    public static int[] convertTextToIntegerArray(String plaintext) {
+        int[] result = new int[plaintext.length()];
+
+        for (int i = 0; i < plaintext.length(); i++) {
+            result[i] = characterToIntegerMap.get(plaintext.charAt(i));
+        }
+
+        return result;
+    }
+    public static void setKey(String key) {
+        Vigenere.key = key.replace(" ", "");
+    }
 
 
 }
