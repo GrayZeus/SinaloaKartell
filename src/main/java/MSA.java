@@ -4,7 +4,7 @@ import java.math.BigInteger;
 import java.nio.charset.Charset;
 import java.util.Arrays;
 
-public class MSA {
+public class MSA extends Subscriber {
 
     RSAKey publicKey;
 
@@ -20,7 +20,7 @@ public class MSA {
         System.out.println("MSA: EventSendBroadcast: Result String: " + resultString);
     }
 
-    private String crack(BigInteger[] cipher) throws RSACrackerException {
+    public String crack(BigInteger[] cipher) throws RSACrackerException {
         // analyze
         RSACracker rsaCracker = new RSACracker(publicKey.part02(),publicKey.n());
 
@@ -56,30 +56,5 @@ public class MSA {
     public void setPublicKey(RSAKey publicKey) {
         this.publicKey = publicKey;
     }
-
-    public static void main(String[] args) throws RSACrackerException {
-
-        MSA msa = new MSA();
-
-        String message = "Test123Drogen";
-        System.out.println(message);
-
-        RSA rsa = new RSA();
-        RSAKey[] rsaKeys = rsa.generateKeys(50);
-        RSAKey publicKey = rsaKeys[0];
-        RSAKey privateKey = rsaKeys[1];
-
-        BigInteger[] cipher = rsa.encrypt(message, publicKey);
-        System.out.println(Arrays.toString(cipher));
-
-        msa.setPublicKey(publicKey);
-
-        String resultString = msa.crack(cipher);
-
-        System.out.println("MSA: EventSendBroadcast: Result String: " + resultString);
-
-
-    }
-
 
 }
