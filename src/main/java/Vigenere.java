@@ -44,4 +44,8 @@ public class Vigenere  {
         key = stringBuilder.toString();
         return key;
     }
+
+    public void setEngine(Engine engine) {
+        this.engine = engine;
+    }
 }
