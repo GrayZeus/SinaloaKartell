@@ -96,7 +96,7 @@ public class Base extends Subscriber {
         eventBus.register(subscriber);
     }
 
-    public void sendBroadcastMessage(BigInteger[]  message) {
+    public void sendBroadcastMessage(BigInteger[] message) {
         eventBus.post(new EventSendBroadcast(message));
     }
 
