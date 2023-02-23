@@ -3,7 +3,7 @@ import java.util.Arrays;
 
 public class RSAExample {
     public static void main(String[] args) {
-        String message = "TESTDROGEN";
+        String message = "TestDrogen124";
         System.out.println(message);
 
         RSA rsa = new RSA();
