@@ -1,22 +1,32 @@
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
-import jdk.jfr.Event;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
 
 public class Base extends Subscriber {
     private EventBus eventBus;
-    private Location[] locations = new Location[20];
+    private Location[] locations;
     private RSAKey privateKey;
+    private RSAKey publicKey;
     private RSA rsa;
+    private List<Drugs> oneGramDrugs;
 
     public Base(EventBus eventBus) {
         this.eventBus = eventBus;
         instantiateLocations();
         Arrays.stream(locations).forEach(this::addSubscriber);
+
+        oneGramDrugs = new ArrayList<>();
+        for (int i = 0; i < (15*1000*1000); i++) {
+            oneGramDrugs.add(new Drugs());
+        }
+
+        rsa = new RSA();
 
     }//end constructor
 
@@ -29,47 +39,72 @@ public class Base extends Subscriber {
         String encryptedText = rsa.decrypt(cipher, privateKey);
         System.out.println("Encrypted Message is: ");
         System.out.println(encryptedText);
-        String destination = analyseEncryptedText(encryptedText);
+        String destination = analyseDecryptedText(encryptedText);
 
-
+        if (oneGramDrugs.size() >= 100) {
+            sendDrugs(destination);
+        }
 
     }
 
-    public String analyseEncryptedText(String encryptedText){
-        switch(encryptedText){
-            case "LOCATIONXONEXREQUESTXONEHUNDREDX":
-                return "ONE";
-            case "LOCATIONXTWOXREQUESTXONEHUNDREDX":
-                return "TWO";
+    @Subscribe
+    private void receive(EventSendDrugs eventSendDrugs) {
+        String destination = eventSendDrugs.getDestination();
+        Map<String,Integer> stringIntegerMap =  IntegerStrings.getStringIntegerMap();
+        int destinationIndex = stringIntegerMap.get(destination) - 1;
 
-            case "LOCATIONXTHREEXREQUESTXONEHUNDREDX":
-                return "ONE";
+        List<Drugs> drugsToSend = new ArrayList<>();
+        for (int i = 0; i < 100; i++) {
+            Drugs currentDrugs = oneGramDrugs.get(0);
+            drugsToSend.add(currentDrugs);
+            oneGramDrugs.remove(currentDrugs);
         }
-        return encryptedText;
+
+        BigInteger[] encryptedMessage = rsa.encrypt("",publicKey);
+
+        sendBroadcastMessage(encryptedMessage);
+
+    }
+
+    public String analyseDecryptedText(String encryptedText){
+        String[] substrings = encryptedText.split("X");
+
+        System.out.println(Arrays.toString(substrings));
+
+        if (substrings.length != 4) {
+            return null;
+        }
+        if (!(substrings[0].equals("LOCATION"))) {
+            return null;
+        }
+        if (!(substrings[2].equals("REQUEST"))) {
+            return null;
+        }
+        if (!(substrings[3].equals("ONEHUNDRED"))) {
+            return null;
+        }
+
+        Map<String, Integer> stringIntegerMap = IntegerStrings.getStringIntegerMap();
+
+        String locationID = substrings[1];
+
+        stringIntegerMap.get(locationID);
+
+        if (stringIntegerMap.get(locationID) == null) {
+            return null;
+        }
+
+        return locationID;
     }
 
     public void instantiateLocations(){
-        locations[0] = new Location("ONE", privateKey);
-        locations[1] = new Location("TWO", privateKey);
-        locations[2] = new Location("THREE", privateKey);
-        locations[3] = new Location("FOUR", privateKey);
-        locations[4] = new Location("FIVE", privateKey);
-        locations[5] = new Location("SIX", privateKey);
-        locations[6] = new Location("SEVEN", privateKey);
-        locations[7] = new Location("EIGHT", privateKey);
-        locations[8] = new Location("NINE", privateKey);
-        locations[9] = new Location("TEN", privateKey);
-        locations[10] = new Location("ELEVEN", privateKey);
-        locations[11] = new Location("TWELVE", privateKey);
-        locations[12] = new Location("THIRTEEN", privateKey);
-        locations[13] = new Location("FOURTEEN", privateKey);
-        locations[14] = new Location("FIFTEEN", privateKey);
-        locations[15] = new Location("SIXTEEN", privateKey);
-        locations[16] = new Location("SEVENTEEN", privateKey);
-        locations[17] = new Location("EIGHTEEN", privateKey);
-        locations[18] = new Location("NINETEEN", privateKey);
-        locations[19] = new Location("TWENTY", privateKey);
-        Arrays.stream(locations).forEach(location -> location.setEventBus(eventBus));
+        locations = new Location[20];
+
+        Map<Integer, String> integerStringMap = IntegerStrings.getIntegerStringMap();
+
+        for (int currentLocation = 1; currentLocation <= locations.length; currentLocation++) {
+            locations[currentLocation-1] = new Location(integerStringMap.get(currentLocation),privateKey,eventBus);
+        }
     }
 
 
@@ -84,10 +119,12 @@ public class Base extends Subscriber {
     public void sendPublicKey(RSAKey publicKey) {
         eventBus.post(new EventSendPublicKey(publicKey));
     }
-/*
-    public void sendDrugs() {
-        eventBus.post(new EventSendDrugs());
+
+    public void sendDrugs(String destination) {
+        eventBus.post(new EventSendDrugs(destination));
     }
 
- */
+    public Location[] getLocations() {
+        return locations;
+    }
 }

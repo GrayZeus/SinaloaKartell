@@ -16,6 +16,8 @@ public class Network {
     private void createInstitutions(){
         msa = new MSA();
         base = new Base(eventBus);
+
+        msa.setLocations(base.getLocations());
     }
 
     public void addSubscriber(Subscriber subscriber) {

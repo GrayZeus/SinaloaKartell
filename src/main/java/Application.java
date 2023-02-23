@@ -1,12 +1,19 @@
+import com.google.common.eventbus.EventBus;
+
 import java.math.BigInteger;
 import java.util.Arrays;
-import java.util.List;
 
 public class Application {
     public static void main(String... args){
         //Network network = new Network();
 
-        testCrackRSA();
+        //testCrackRSA();
+
+        String testString = "LOCATIONXFOURXREQUESTXONEHUNDREDX";
+
+        Base base = new Base(new EventBus());
+
+        base.analyseDecryptedText(testString);
     }
 
 

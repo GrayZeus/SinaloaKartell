@@ -1,14 +1,12 @@
-import java.math.BigInteger;
-
 public class EventSendDrugs {
 
-    private BigInteger[] message;
+    private String destination;
 
-    public EventSendDrugs(BigInteger[] message) {
-        this.message = message;
+    public EventSendDrugs(String destination) {
+        this.destination = destination;
     }
 
-    public BigInteger[] getMessage() {
-        return message;
+    public String getDestination() {
+        return destination;
     }
 }
