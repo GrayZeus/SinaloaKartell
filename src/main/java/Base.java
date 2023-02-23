@@ -1,40 +1,41 @@
 import com.google.common.eventbus.EventBus;
 import jdk.jfr.Event;
+
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
 
 
 public class Base {
-    private static Drugs drugs;
     private static EventBus eventBus = null;
     private static Location[] locations = new Location[20];
     private static RSAKey privateKey;
-    private static RSAKey publicKey;
-
-    private static RSA rsa;
 
 
     public static void main(String... args){
         MSA msa = new MSA();
         Base base = new Base();
-        base.sendPublicKey(publicKey);
-        String message = "TESTTTT";
-        //Encryption
-        byte[] cipher = rsa.encrypt(message, publicKey);
+
+        //Marius Code - Snippet
+        String message = "Test123Drogen";
+        System.out.println(message);
+
+        RSA rsa = new RSA();
+        RSAKey[] rsaKeys = rsa.generateKeys(128);
+        RSAKey publicKey = rsaKeys[0];
+        privateKey = rsaKeys[1];
+
+        BigInteger[] cipher = rsa.encrypt(message, publicKey);
         System.out.println(Arrays.toString(cipher));
 
-        base.sendBroadcastMessage(cipher);
+        String encryptedText = rsa.decrypt(cipher, privateKey);
+        System.out.println(encryptedText);
         //Ende Code Marius
 
-    }//end main
+    }
 
     public Base() {
             eventBus = new EventBus();
-
-            rsa = new RSA();
-            RSAKey[] rsaKeys = rsa.generateKeys(128);
-            publicKey = rsaKeys[0];
-            privateKey = rsaKeys[1];
             locations[0] = new Location("ONE", privateKey);
             locations[1] = new Location("TWO", privateKey);
             locations[2] = new Location("THREE", privateKey);
@@ -56,7 +57,6 @@ public class Base {
             locations[18] = new Location("NINETEEN", privateKey);
             locations[19] = new Location("TWENTY", privateKey);
 
-            //Adding subscribers
             Arrays.stream(locations).forEach(this::addSubscriber);
     }//end constructor
 

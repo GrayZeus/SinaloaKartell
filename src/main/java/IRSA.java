@@ -1,6 +1,8 @@
-public interface IRSA {
-    byte[] encrypt(String plainMessage, RSAKey key);
+import java.math.BigInteger;
 
-    String decrypt(byte[] cipher, RSAKey key);
+public interface IRSA {
+    BigInteger[] encrypt(String plainMessage, RSAKey key);
+
+    String decrypt(BigInteger[] cipher, RSAKey key);
     RSAKey[] generateKeys(int keySize);
 }
