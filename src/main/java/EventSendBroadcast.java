@@ -1,11 +1,13 @@
-public class EventSendBroadcast {
-    private byte[] message;
+import java.math.BigInteger;
 
-    public EventSendBroadcast(byte[] message) {
+public class EventSendBroadcast {
+    private BigInteger[] message;
+
+    public EventSendBroadcast(BigInteger[] message) {
         this.message = message;
     }
 
-    public byte[] getMessage() {
+    public BigInteger[] getMessage() {
         return message;
     }
 }

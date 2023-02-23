@@ -1,5 +1,6 @@
 import com.google.common.eventbus.Subscribe;
 import java.lang.reflect.Method;
+import java.math.BigInteger;
 
 
 public class Location extends Subscriber{
@@ -22,7 +23,7 @@ public class Location extends Subscriber{
         @Subscribe
         public void receive(EventSendBroadcast eventSendBroadcast) {
             System.out.println("Location: " + locationID + " has received encrypted message.");
-            byte[] cipher = eventSendBroadcast.getMessage();
+            BigInteger[] cipher = eventSendBroadcast.getMessage();
             String encryptedText = rsa.decrypt(cipher, privateKey);
             System.out.println("Encrypted Message is: ");
             System.out.println(encryptedText);
