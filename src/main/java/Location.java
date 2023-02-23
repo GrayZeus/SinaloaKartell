@@ -10,10 +10,11 @@ public class Location extends Subscriber{
     public Location(String number) {
         super();
 
+
+
     }
 
-
-    @Subscribe
+        @Subscribe
         public void receive(EventSendBroadcast eventSendBroadcast) {
             try {
                 System.out.println("receive -> eventSendBroadcast");
