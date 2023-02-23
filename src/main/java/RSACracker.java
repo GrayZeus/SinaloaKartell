@@ -3,14 +3,12 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class RSACracker {
-    private final BigInteger e;
-    private final BigInteger n;
-    private final BigInteger d;
+    private BigInteger e;
+    private BigInteger n;
+    private BigInteger d;
 
-    public RSACracker(BigInteger e, BigInteger n) {
-        BigInteger assignToE = null;
-        BigInteger assignToN = null;
-        BigInteger assignToD = null;
+    public RSACracker(BigInteger e, BigInteger n) throws RSACrackerException {
+        /* BigInteger assignToD = null;
 
         try {
             assignToE = e;
@@ -24,6 +22,11 @@ public class RSACracker {
         this.e = assignToE;
         this.n = assignToN;
         this.d = assignToD;
+
+         */
+        this.e = e;
+        this.n = n;
+        this.d = calculateD();
     }
 
     private BigInteger calculateD() throws RSACrackerException {

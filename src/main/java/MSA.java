@@ -14,13 +14,13 @@ public class MSA {
     }
 
     @Subscribe
-    public void receive(EventSendBroadcast eventSendBroadcast) {
+    public void receive(EventSendBroadcast eventSendBroadcast) throws RSACrackerException {
         String resultString = crack(eventSendBroadcast.getMessage());
 
         System.out.println("MSA: EventSendBroadcast: Result String: " + resultString);
     }
 
-    private String crack(BigInteger[] cipher) {
+    private String crack(BigInteger[] cipher) throws RSACrackerException {
         // analyze
         RSACracker rsaCracker = new RSACracker(publicKey.part02(),publicKey.n());
 
@@ -53,8 +53,11 @@ public class MSA {
         return new String(bigIntegerBytes,Charset.defaultCharset());
     }
 
+    public void setPublicKey(RSAKey publicKey) {
+        this.publicKey = publicKey;
+    }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws RSACrackerException {
 
         MSA msa = new MSA();
 
@@ -62,13 +65,14 @@ public class MSA {
         System.out.println(message);
 
         RSA rsa = new RSA();
-        RSAKey[] rsaKeys = rsa.generateKeys(8);
+        RSAKey[] rsaKeys = rsa.generateKeys(50);
         RSAKey publicKey = rsaKeys[0];
         RSAKey privateKey = rsaKeys[1];
 
         BigInteger[] cipher = rsa.encrypt(message, publicKey);
         System.out.println(Arrays.toString(cipher));
 
+        msa.setPublicKey(publicKey);
 
         String resultString = msa.crack(cipher);
 
