@@ -8,22 +8,6 @@ public class RSACracker {
     private BigInteger d;
 
     public RSACracker(BigInteger e, BigInteger n) throws RSACrackerException {
-        /* BigInteger assignToD = null;
-
-        try {
-            assignToE = e;
-            assignToN = n;
-            assignToD = calculateD();
-        }
-        catch (Exception exception) {
-            exception.printStackTrace();
-        }
-
-        this.e = assignToE;
-        this.n = assignToN;
-        this.d = assignToD;
-
-         */
         this.e = e;
         this.n = n;
         this.d = calculateD();
