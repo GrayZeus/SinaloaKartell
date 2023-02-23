@@ -30,7 +30,7 @@ public class RSA implements IRSA {
 
     @Override
     public RSAKey[] generateKeys(int keySize) {
-        if (keySize < 512) {
+        if (keySize < 128) {
             throw new IllegalArgumentException("key size too small");
         }
 
