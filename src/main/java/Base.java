@@ -1,4 +1,5 @@
 import com.google.common.eventbus.EventBus;
+import com.google.common.eventbus.Subscribe;
 import jdk.jfr.Event;
 
 import java.math.BigInteger;
@@ -6,21 +7,27 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 
-public class Base {
+public class Base extends Subscriber {
     private static EventBus eventBus = null;
     private static Location[] locations = new Location[20];
     private static RSAKey privateKey;
 
+    private static RSA rsa;
 
     public static void main(String... args){
         MSA msa = new MSA();
         Base base = new Base();
+        base.addSubscriber(base);
+
+        base.addSubscriber(msa);
+        Arrays.stream(locations).forEach(location -> location.setEventBus(eventBus));
+
 
         //Marius Code - Snippet
         String message = "Test123Drogen";
         System.out.println(message);
 
-        RSA rsa = new RSA();
+        rsa = new RSA();
         RSAKey[] rsaKeys = rsa.generateKeys(128);
         RSAKey publicKey = rsaKeys[0];
         privateKey = rsaKeys[1];
@@ -59,6 +66,31 @@ public class Base {
 
             Arrays.stream(locations).forEach(this::addSubscriber);
     }//end constructor
+
+    @Subscribe
+    public void receive(EventPlaceOrder eventPlaceOrder) {
+        System.out.println("Base: has received encrypted message from Location.");
+        BigInteger[] cipher = eventPlaceOrder.getCipher();
+        String encryptedText = rsa.decrypt(cipher, privateKey);
+        System.out.println("Encrypted Message is: ");
+        System.out.println(encryptedText);
+    }
+
+
+    public String analyseEncryptedText(String encryptedText){
+        switch(encryptedText){
+            case "LOCATIONXONEXREQUESTXONEHUNDREDX":
+                return "ONE";
+                break;
+            case "LOCATIONXONEXREQUESTXONEHUNDREDX":
+                return "ONE";
+            break;
+            case "LOCATIONXONEXREQUESTXONEHUNDREDX":
+                return "ONE";
+            break;
+
+        }
+    }
 
     public void addSubscriber(Subscriber subscriber) {
         eventBus.register(subscriber);
