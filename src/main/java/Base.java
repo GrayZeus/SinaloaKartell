@@ -1,5 +1,7 @@
 import com.google.common.eventbus.EventBus;
 import jdk.jfr.Event;
+
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -23,7 +25,7 @@ public class Base {
         RSAKey publicKey = rsaKeys[0];
         privateKey = rsaKeys[1];
 
-        byte[] cipher = rsa.encrypt(message, publicKey);
+        BigInteger[] cipher = rsa.encrypt(message, publicKey);
         System.out.println(Arrays.toString(cipher));
 
         String encryptedText = rsa.decrypt(cipher, privateKey);

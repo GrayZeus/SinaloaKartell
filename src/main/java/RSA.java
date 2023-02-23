@@ -13,24 +13,35 @@ public class RSA implements IRSA {
     private BigInteger e;
     private BigInteger d;
     @Override
-    public byte[] encrypt(String plainMessage, RSAKey key) {
+    public BigInteger[] encrypt(String plainMessage, RSAKey key) {
         byte[] bytes = plainMessage.getBytes(Charset.defaultCharset());
-        return internalEncrypt(new BigInteger(bytes), key).toByteArray();
+        BigInteger[] cipher = new BigInteger[bytes.length];
+        for (int i = 0; i < bytes.length; i++) {
+            cipher[i] = internalEncrypt(new BigInteger(String.valueOf(bytes[i])), key);
+        }
+        return  cipher;
     }
 
     @Override
-    public String decrypt(byte[] cipher, RSAKey key) {
-        byte[] msg = internalEncrypt(new BigInteger(cipher), key).toByteArray();
-        return new String(msg);
+    public String decrypt(BigInteger[] cipher, RSAKey key) {
+        byte[] message = new byte[cipher.length];
+        for (int i = 0; i < cipher.length; i++) {
+            message[i] = internalDecrypt(cipher[i], key);
+        }
+        return new String(message);
     }
 
-    private BigInteger internalEncrypt(BigInteger message, RSAKey key) {
-        return message.modPow(key.part02(), key.n());
+    private BigInteger internalEncrypt(BigInteger messagePart, RSAKey key) {
+        return messagePart.modPow(key.part02(), key.n());
+    }
+
+    private byte internalDecrypt(BigInteger cipherPart, RSAKey key) {
+        return cipherPart.modPow(key.part02(), key.n()).toByteArray()[0];
     }
 
     @Override
     public RSAKey[] generateKeys(int keySize) {
-        if (keySize < 128) {
+        if (keySize < 8) {
             throw new IllegalArgumentException("key size too small");
         }
 
