@@ -8,8 +8,10 @@ public class Network {
     public Network() {
         eventBus = new EventBus();
         createInstitutions();
+        addSubscriber(base);
         addSubscriber(msa);
 
+        base.sendPublicKey(base.getPublicKey());
     }//end constructor
 
 
@@ -24,4 +26,11 @@ public class Network {
         eventBus.register(subscriber);
     }
 
+    public Base getBase() {
+        return base;
+    }
+
+    public MSA getMsa() {
+        return msa;
+    }
 }

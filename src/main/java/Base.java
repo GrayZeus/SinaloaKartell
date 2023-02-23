@@ -17,6 +17,12 @@ public class Base extends Subscriber {
     private List<Drugs> oneGramDrugs;
 
     public Base(EventBus eventBus) {
+        rsa = new RSA();
+
+        RSAKey[] keys = rsa.generateKeys(50);
+        publicKey = keys[0];
+        privateKey = keys[1];
+
         this.eventBus = eventBus;
         instantiateLocations();
         Arrays.stream(locations).forEach(this::addSubscriber);
@@ -26,11 +32,16 @@ public class Base extends Subscriber {
             oneGramDrugs.add(new Drugs());
         }
 
-        rsa = new RSA();
+
+
+
 
     }//end constructor
 
-
+    @Subscribe
+    public void receive(EventSendPublicKey eventSendPublicKey) {
+        publicKey = eventSendPublicKey.getRsaKey();
+    }
 
     @Subscribe
     public void receive(EventPlaceOrder eventPlaceOrder) {
@@ -41,6 +52,8 @@ public class Base extends Subscriber {
         System.out.println(encryptedText);
         String destination = analyseDecryptedText(encryptedText);
 
+        System.out.println("Drug amount: " + oneGramDrugs.size());
+
         if (oneGramDrugs.size() >= 100) {
             sendDrugs(destination);
         }
@@ -49,6 +62,8 @@ public class Base extends Subscriber {
 
     @Subscribe
     private void receive(EventSendDrugs eventSendDrugs) {
+        System.out.println("Base: Received EventSendDrugs");
+
         String destination = eventSendDrugs.getDestination();
         Map<String,Integer> stringIntegerMap =  IntegerStrings.getStringIntegerMap();
         int destinationIndex = stringIntegerMap.get(destination) - 1;
@@ -60,7 +75,9 @@ public class Base extends Subscriber {
             oneGramDrugs.remove(currentDrugs);
         }
 
-        BigInteger[] encryptedMessage = rsa.encrypt("",publicKey);
+        locations[destinationIndex].addDrugs(drugsToSend);
+
+        BigInteger[] encryptedMessage = rsa.encrypt("DRUGSXONEHUNDREDXSENDXTOXLOCATIONX" + destination,publicKey);
 
         sendBroadcastMessage(encryptedMessage);
 
@@ -126,5 +143,9 @@ public class Base extends Subscriber {
 
     public Location[] getLocations() {
         return locations;
+    }
+
+    public RSAKey getPublicKey() {
+        return publicKey;
     }
 }

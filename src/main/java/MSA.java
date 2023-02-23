@@ -7,8 +7,13 @@ import java.util.Map;
 
 public class MSA extends Subscriber {
 
-    RSAKey publicKey;
-    Location[] locations;
+    private RSAKey publicKey;
+    private Location[] locations;
+    private Protocol<Long,String> protocolOfCryptoAnalytics;
+
+    public MSA() {
+        protocolOfCryptoAnalytics = new Protocol<>();
+    }
 
     @Subscribe
     public void receive(EventSendPublicKey eventSendPublicKey) {
@@ -31,11 +36,13 @@ public class MSA extends Subscriber {
             return;
         }
 
-        Map<String,Integer> stringIntegerMap =  IntegerStrings.getStringIntegerMap();
+        Map<String, Integer> stringIntegerMap = IntegerStrings.getStringIntegerMap();
         int destinationIndex = stringIntegerMap.get(destinationId) - 1;
         Location destination = locations[destinationIndex];
 
         destination.setDrugs(null);
+
+        protocol("Drugs confiscated");
     }
 
     public String analyseDecryptedText(String encryptedText){
@@ -43,22 +50,28 @@ public class MSA extends Subscriber {
 
         System.out.println(Arrays.toString(substrings));
 
-        if (substrings.length != 4) {
+        if (substrings.length != 6) {
             return null;
         }
-        if (!(substrings[0].equals("LOCATION"))) {
+        if (!(substrings[0].equals("DRUGS"))) {
             return null;
         }
-        if (!(substrings[2].equals("REQUEST"))) {
+        if (!(substrings[1].equals("ONEHUNDRED"))) {
             return null;
         }
-        if (!(substrings[3].equals("ONEHUNDRED"))) {
+        if (!(substrings[2].equals("SEND"))) {
+            return null;
+        }
+        if (!(substrings[3].equals("TO"))) {
+            return null;
+        }
+        if (!(substrings[4].equals("LOCATION"))) {
             return null;
         }
 
         Map<String, Integer> stringIntegerMap = IntegerStrings.getStringIntegerMap();
 
-        String locationID = substrings[1];
+        String locationID = substrings[5];
 
         stringIntegerMap.get(locationID);
 
@@ -66,6 +79,7 @@ public class MSA extends Subscriber {
             return null;
         }
 
+        protocol("Identified location " + locationID);
         return locationID;
     }
 
@@ -87,7 +101,12 @@ public class MSA extends Subscriber {
             e.printStackTrace();
         }
 
+        protocol("Cracked message: " + resultString);
         return resultString;
+    }
+
+    private void protocol(String description) {
+        protocolOfCryptoAnalytics.addToProtocolMap(System.nanoTime(),description);
     }
 
 
@@ -107,5 +126,9 @@ public class MSA extends Subscriber {
 
     public void setLocations(Location[] locations) {
         this.locations = locations;
+    }
+
+    public Protocol<Long, String> getProtocolOfCryptoAnalytics() {
+        return protocolOfCryptoAnalytics;
     }
 }

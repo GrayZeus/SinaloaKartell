@@ -2,18 +2,22 @@ import com.google.common.eventbus.EventBus;
 
 import java.math.BigInteger;
 import java.util.Arrays;
+import java.util.Map;
 
 public class Application {
     public static void main(String... args){
-        //Network network = new Network();
+        Network network = new Network();
 
-        //testCrackRSA();
+        Location[] locations = network.getBase().getLocations();
 
-        String testString = "LOCATIONXFOURXREQUESTXONEHUNDREDX";
+        locations[0].doOrder();
 
-        Base base = new Base(new EventBus());
+        Map<Long,String> protocolMap = network.getMsa().getProtocolOfCryptoAnalytics().getProtocolMap();
 
-        base.analyseDecryptedText(testString);
+        for (Map.Entry<Long, String> entry:protocolMap.entrySet()
+             ) {
+            System.out.println("Key: " + entry.getKey() + "; Value: " + entry.getValue());
+        }
     }
 
 
