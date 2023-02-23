@@ -1,4 +1,4 @@
-public interface IVigenere {
+public interface IEngine {
     String generateKey(String plainMessage, StringBuilder keyword);
 
     String encrypt(String plainMessage, String keyword);
