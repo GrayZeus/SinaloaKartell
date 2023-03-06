@@ -16,9 +16,12 @@ public class Base extends Subscriber {
     private final RSA rsa;
     private final List<Drugs> oneGramDrugs;
 
+    private CartelLogging cartelLogging;
+
     public Base() {
         rsa = new RSA();
         eventBus = new EventBus();
+        cartelLogging = new CartelLogging();
         RSAKey[] keys = rsa.generateKeys(50);
         publicKey = keys[0];
         privateKey = keys[1];
@@ -43,14 +46,19 @@ public class Base extends Subscriber {
     @Subscribe
     public void receive(EventPlaceOrder eventPlaceOrder) {
         System.out.println("Base has received order message from a Location.");
+        System.out.println("Message will be decrypted and logged.");
         BigInteger[] cipher = eventPlaceOrder.getCipher();
         String encryptedText = rsa.decrypt(cipher, privateKey);
-        System.out.println("Encrypted Message is: ");
-        System.out.println(encryptedText);
+
+//        System.out.println("Encrypted Message is: ");
+//        System.out.println(encryptedText);
 
         String destination = analyseDecryptedText(encryptedText);
+//        System.out.println("Drug amount: " + oneGramDrugs.size());
 
-        System.out.println("Drug amount: " + oneGramDrugs.size());
+        cartelLogging.addCartelLog(destination, "cipher" , encryptedText);
+        cartelLogging.outputCartelLog();
+
 
         if (oneGramDrugs.size() >= 100) {
             sendDrugs(destination);
