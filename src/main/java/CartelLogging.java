@@ -15,11 +15,13 @@ public class CartelLogging {
     }
 
     public void outputCartelLog() {
+        System.out.println();
         System.out.println("All Cartel Logs of LocationXY/Base will be presented:");
         for (int i = 0; i < localDateTimes.size(); i++) {
             System.out.println("Local Date Time:" + localDateTimes.get(i).toString() + " | Location: " +
                     locations.get(i) + " | Cipher: " + ciphers.get(i) + " | Plain Text: " + plainTexts.get(i));
         }
+        System.out.println();
     }
 
 }

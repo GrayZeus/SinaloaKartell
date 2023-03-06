@@ -28,6 +28,9 @@ public class MSA extends Subscriber {
 
         String destinationId = analyseDecryptedText(resultString);
 
+        System.out.println();
+        System.out.println();
+
         confiscateDrugs(destinationId);
     }
 

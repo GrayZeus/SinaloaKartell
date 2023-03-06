@@ -49,26 +49,30 @@ public class Base extends Subscriber {
         System.out.println("Message will be decrypted and logged.");
         BigInteger[] cipher = eventPlaceOrder.getCipher();
         String encryptedText = rsa.decrypt(cipher, privateKey);
-
-//        System.out.println("Encrypted Message is: ");
-//        System.out.println(encryptedText);
-
         String destination = analyseDecryptedText(encryptedText);
-//        System.out.println("Drug amount: " + oneGramDrugs.size());
+        String cipherString = convertCipherToString(cipher);
 
-        cartelLogging.addCartelLog(destination, "cipher" , encryptedText);
+        cartelLogging.addCartelLog(destination, cipherString , encryptedText);
         cartelLogging.outputCartelLog();
-
 
         if (oneGramDrugs.size() >= 100) {
             sendDrugs(destination);
         }
-
     }
+
+    public String convertCipherToString(BigInteger[] cipher){
+        String cipherString = "";
+        for(int i = 0 ; i < cipher.length ; i++){
+            cipherString = cipherString + cipher[i].toString();
+        }
+        return cipherString;
+    }
+
 
     @Subscribe
     private void receive(EventSendDrugs eventSendDrugs) {
         System.out.println("Base received instruction to send Drugs. Drugs will be sent.");
+        System.out.println();
 
         String destination = eventSendDrugs.getDestination();
         Map<String, Integer> stringIntegerMap = IntegerStrings.getStringIntegerMap();
@@ -88,20 +92,6 @@ public class Base extends Subscriber {
     public String analyseDecryptedText(String encryptedText) {
         String[] substrings = encryptedText.split("X");
         System.out.println(Arrays.toString(substrings));
-        /*
-        if (substrings.length != 4) {
-            return null;
-        }
-        if (!(substrings[0].equals("LOCATION"))) {
-            return null;
-        }
-        if (!(substrings[2].equals("REQUEST"))) {
-            return null;
-        }
-        if (!(substrings[3].equals("ONEHUNDRED"))) {
-            return null;
-        }
-         */
         Map<String, Integer> stringIntegerMap = IntegerStrings.getStringIntegerMap();
         String locationID = substrings[1];
         stringIntegerMap.get(locationID);
