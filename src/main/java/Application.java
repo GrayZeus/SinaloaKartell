@@ -1,23 +1,26 @@
-import com.google.common.eventbus.EventBus;
-
 import java.math.BigInteger;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Map;
 
 public class Application {
-    public static void main(String... args){
+    public static void main(String... args) {
         Network network = new Network();
         formatOutputSeparator();
-        Map<Long,String> protocolMap = network.getMsa().getProtocolOfCryptoAnalytics().getProtocolMap();
+        Map<Long, String> protocolMap = network.getMsa().getProtocolOfCryptoAnalytics().getProtocolMap();
 
-        for (Map.Entry<Long, String> entry:protocolMap.entrySet()
-             ) {
+        for (Map.Entry<Long, String> entry : protocolMap.entrySet()
+        ) {
             System.out.println("Key: " + entry.getKey() + "; Value: " + entry.getValue());
         }
 
+
+        LocalDateTime dateTime = LocalDateTime.now();
+        System.out.println(dateTime);
+
     }
 
-    public static void formatOutputSeparator(){
+    public static void formatOutputSeparator() {
         System.out.println();
         System.out.println();
         System.out.println("################################################################");
@@ -26,7 +29,7 @@ public class Application {
     }
 
 
-    public static void testCrackRSA(){
+    public static void testCrackRSA() {
         try {
             MSA msa = new MSA();
 
@@ -46,8 +49,7 @@ public class Application {
             String resultString = msa.crack(cipher);
 
             System.out.println("MSA: EventSendBroadcast: Result String: " + resultString);
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

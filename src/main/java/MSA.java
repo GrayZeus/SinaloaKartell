@@ -9,7 +9,7 @@ public class MSA extends Subscriber {
 
     private RSAKey publicKey;
     private Location[] locations;
-    private Protocol<Long,String> protocolOfCryptoAnalytics;
+    private final Protocol<Long, String> protocolOfCryptoAnalytics;
 
     public MSA() {
         protocolOfCryptoAnalytics = new Protocol<>();
@@ -45,7 +45,7 @@ public class MSA extends Subscriber {
         protocol("Drugs confiscated");
     }
 
-    public String analyseDecryptedText(String encryptedText){
+    public String analyseDecryptedText(String encryptedText) {
         String[] substrings = encryptedText.split("X");
 
         System.out.println(Arrays.toString(substrings));
@@ -84,20 +84,19 @@ public class MSA extends Subscriber {
     }
 
     public String crack(BigInteger[] cipher) throws RSACrackerException {
-        RSACracker rsaCracker = new RSACracker(publicKey.part02(),publicKey.n());
+        RSACracker rsaCracker = new RSACracker(publicKey.part02(), publicKey.n());
 
         String resultString = "";
 
         try {
             BigInteger resultPartBigInteger;
 
-            for (BigInteger messagePart:cipher
+            for (BigInteger messagePart : cipher
             ) {
                 resultPartBigInteger = rsaCracker.execute(messagePart);
                 resultString += bigIntegerToString(resultPartBigInteger);
             }
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -106,9 +105,8 @@ public class MSA extends Subscriber {
     }
 
     private void protocol(String description) {
-        protocolOfCryptoAnalytics.addToProtocolMap(System.nanoTime(),description);
+        protocolOfCryptoAnalytics.addToProtocolMap(System.nanoTime(), description);
     }
-
 
 
     private BigInteger byteArrayToBigInteger(byte[] bytes) {
@@ -116,8 +114,8 @@ public class MSA extends Subscriber {
     }
 
     private String bigIntegerToString(BigInteger bigInteger) {
-        byte[] bigIntegerBytes =  bigInteger.toByteArray();
-        return new String(bigIntegerBytes,Charset.defaultCharset());
+        byte[] bigIntegerBytes = bigInteger.toByteArray();
+        return new String(bigIntegerBytes, Charset.defaultCharset());
     }
 
     public void setPublicKey(RSAKey publicKey) {

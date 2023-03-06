@@ -1,7 +1,5 @@
-import java.math.BigInteger;
-
 public class EventSendPublicKey {
-    private RSAKey rsaKey;
+    private final RSAKey rsaKey;
 
     public EventSendPublicKey(RSAKey rsaKey) {
         this.rsaKey = rsaKey;

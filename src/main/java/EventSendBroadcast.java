@@ -1,7 +1,7 @@
 import java.math.BigInteger;
 
 public class EventSendBroadcast {
-    private BigInteger[] message;
+    private final BigInteger[] message;
 
     public EventSendBroadcast(BigInteger[] message) {
         this.message = message;

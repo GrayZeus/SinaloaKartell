@@ -1,35 +1,32 @@
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
-import org.checkerframework.checker.units.qual.A;
 
-import java.lang.reflect.Method;
 import java.math.BigInteger;
-import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 
-public class Location extends Subscriber{
-    private RSAKey privateKey;
+public class Location extends Subscriber {
+    private final RSAKey privateKey;
     private RSAKey publicKey;
-    private String locationID;
-    private String deliveryRequired;
-    private EventBus eventBus;
+    private final String locationID;
+    private final String deliveryRequired;
+    private final EventBus eventBus;
     private BigInteger[] cipher;
-    private RSA rsa;
+    private final RSA rsa;
     private List<Drugs> oneGramDrugs;
 
     public Location(String locationID, RSAKey privateKey, EventBus eventBus) {
         this.privateKey = privateKey;
         this.locationID = locationID;
-        this.deliveryRequired = "LOCATIONX" + locationID +  "XREQUESTXONEHUNDREDX";
+        this.deliveryRequired = "LOCATIONX" + locationID + "XREQUESTXONEHUNDREDX";
         this.eventBus = eventBus;
         this.oneGramDrugs = new ArrayList<>();
         rsa = new RSA();
     }//end constructor
 
-    public void doOrder(){
+    public void doOrder() {
         cipher = rsa.encrypt(deliveryRequired, publicKey);
         sendOrder(cipher);
     }
@@ -55,10 +52,10 @@ public class Location extends Subscriber{
     }
 
     @Subscribe
-    public void receive(EventPlaceOrder eventPlaceOrder){
+    public void receive(EventPlaceOrder eventPlaceOrder) {
         System.out.println("Order has been received! From location " + locationID + ".");
         BigInteger[] receivedOrderCipher = eventPlaceOrder.getCipher();
-        String decryptedOrderText = rsa.decrypt(receivedOrderCipher,privateKey);
+        String decryptedOrderText = rsa.decrypt(receivedOrderCipher, privateKey);
         System.out.println("Order has been decrypted, here is the message:");
         System.out.println(decryptedOrderText);
 

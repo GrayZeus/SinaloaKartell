@@ -1,8 +1,8 @@
 import java.util.HashMap;
 import java.util.Map;
 
-public class Protocol<K,V> {
-    private Map<K,V> protocolMap;
+public class Protocol<K, V> {
+    private final Map<K, V> protocolMap;
 
     public Protocol() {
         protocolMap = new HashMap<>();
@@ -13,6 +13,6 @@ public class Protocol<K,V> {
     }
 
     public void addToProtocolMap(K key, V value) {
-        protocolMap.put(key,value);
+        protocolMap.put(key, value);
     }
 }

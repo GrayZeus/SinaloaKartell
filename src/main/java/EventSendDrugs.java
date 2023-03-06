@@ -1,6 +1,6 @@
 public class EventSendDrugs {
 
-    private String destination;
+    private final String destination;
 
     public EventSendDrugs(String destination) {
         this.destination = destination;

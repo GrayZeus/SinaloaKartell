@@ -3,9 +3,9 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class RSACracker {
-    private BigInteger e;
-    private BigInteger n;
-    private BigInteger d;
+    private final BigInteger e;
+    private final BigInteger n;
+    private final BigInteger d;
 
     public RSACracker(BigInteger e, BigInteger n) throws RSACrackerException {
         this.e = e;

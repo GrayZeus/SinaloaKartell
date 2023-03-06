@@ -11,10 +11,10 @@ import java.util.Map;
 public class Base extends Subscriber {
     private EventBus eventBus;
     private Location[] locations;
-    private RSAKey privateKey;
-    private RSAKey publicKey;
-    private RSA rsa;
-    private List<Drugs> oneGramDrugs;
+    private final RSAKey privateKey;
+    private final RSAKey publicKey;
+    private final RSA rsa;
+    private final List<Drugs> oneGramDrugs;
 
     public Base() {
         rsa = new RSA();
@@ -23,14 +23,14 @@ public class Base extends Subscriber {
         publicKey = keys[0];
         privateKey = keys[1];
         oneGramDrugs = new ArrayList<>();
-        for (int i = 0; i < (15*1000*1000); i++) {
+        for (int i = 0; i < (15 * 1000 * 1000); i++) {
             oneGramDrugs.add(new Drugs());
         }
 
     }//end constructor
 
 
-    public void instantiateLocationsAndAddThemAsSubscribers(){
+    public void instantiateLocationsAndAddThemAsSubscribers() {
         instantiateLocations();
         Arrays.stream(locations).forEach(this::addSubscriber);
     }
@@ -63,7 +63,7 @@ public class Base extends Subscriber {
         System.out.println("Base received instruction to send Drugs. Drugs will be sent.");
 
         String destination = eventSendDrugs.getDestination();
-        Map<String,Integer> stringIntegerMap =  IntegerStrings.getStringIntegerMap();
+        Map<String, Integer> stringIntegerMap = IntegerStrings.getStringIntegerMap();
         int destinationIndex = stringIntegerMap.get(destination) - 1;
 
         List<Drugs> drugsToSend = new ArrayList<>();
@@ -73,11 +73,11 @@ public class Base extends Subscriber {
             oneGramDrugs.remove(currentDrugs);
         }
         locations[destinationIndex].addDrugs(drugsToSend);
-        BigInteger[] encryptedMessage = rsa.encrypt("DRUGSXONEHUNDREDXSENDXTOXLOCATIONX" + destination,publicKey);
+        BigInteger[] encryptedMessage = rsa.encrypt("DRUGSXONEHUNDREDXSENDXTOXLOCATIONX" + destination, publicKey);
         sendBroadcastMessage(encryptedMessage);
     }
 
-    public String analyseDecryptedText(String encryptedText){
+    public String analyseDecryptedText(String encryptedText) {
         String[] substrings = encryptedText.split("X");
         System.out.println(Arrays.toString(substrings));
         /*
@@ -103,13 +103,13 @@ public class Base extends Subscriber {
         return locationID;
     }
 
-    public void instantiateLocations(){
+    public void instantiateLocations() {
         locations = new Location[20];
 
         Map<Integer, String> integerStringMap = IntegerStrings.getIntegerStringMap();
 
         for (int currentLocation = 1; currentLocation <= locations.length; currentLocation++) {
-            locations[currentLocation-1] = new Location(integerStringMap.get(currentLocation),privateKey,eventBus);
+            locations[currentLocation - 1] = new Location(integerStringMap.get(currentLocation), privateKey, eventBus);
         }
     }
 

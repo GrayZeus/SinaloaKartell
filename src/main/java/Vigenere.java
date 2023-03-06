@@ -1,8 +1,7 @@
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Vigenere  {
+public class Vigenere {
     public static final Map<Character, Integer> characterToIntegerMap;
     public static final Map<Integer, Character> integerToCharacterMap;
     private static String key;
@@ -133,6 +132,7 @@ public class Vigenere  {
 
         return result;
     }
+
     public static void setKey(String key) {
         Vigenere.key = key.replace(" ", "");
     }

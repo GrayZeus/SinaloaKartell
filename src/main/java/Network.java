@@ -1,7 +1,7 @@
 import com.google.common.eventbus.EventBus;
 
 public class Network {
-    private EventBus eventBus;
+    private final EventBus eventBus;
     private MSA msa;
     private Base base;
 
@@ -20,7 +20,7 @@ public class Network {
     }//end constructor
 
 
-    private void createInstitutions(){
+    private void createInstitutions() {
         msa = new MSA();
         base = new Base();
     }

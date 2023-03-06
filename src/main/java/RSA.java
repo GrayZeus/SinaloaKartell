@@ -12,6 +12,7 @@ public class RSA implements IRSA {
     private BigInteger q;
     private BigInteger e;
     private BigInteger d;
+
     @Override
     public BigInteger[] encrypt(String plainMessage, RSAKey key) {
         byte[] bytes = plainMessage.getBytes(Charset.defaultCharset());
@@ -19,7 +20,7 @@ public class RSA implements IRSA {
         for (int i = 0; i < bytes.length; i++) {
             cipher[i] = internalEncrypt(new BigInteger(String.valueOf(bytes[i])), key);
         }
-        return  cipher;
+        return cipher;
     }
 
     @Override

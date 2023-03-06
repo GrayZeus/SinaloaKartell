@@ -2,11 +2,13 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.HashSet;
 
-public class Engine implements IEngine{
+public class Engine implements IEngine {
     private HashSet<String> dictionary;
+
     public Engine() {
         readDictionary();
     }
+
     public String generateKey(String plainMessage, StringBuilder keyword) {
         int x = plainMessage.length();
         for (int i = 0; ; i++) {
@@ -40,6 +42,7 @@ public class Engine implements IEngine{
         }
         return decryptedMessage.toString();
     }
+
     public void execute(String cipher, int keyLength, int firstWordLength) {
         ArrayList<String> possiblePlainMessageList = new ArrayList<>();
         char[] key = new char[keyLength];
@@ -60,6 +63,7 @@ public class Engine implements IEngine{
         System.out.println("[possible plain messages]");
         possiblePlainMessageList.forEach(System.out::println);
     }
+
     private void generateKey(char[] key, int keyLength) {
         if (key[0] == 0) {
             for (int i = 0; i < keyLength; i++) {
