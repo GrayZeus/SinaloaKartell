@@ -10,16 +10,19 @@ public class Network {
         createInstitutions();
         addSubscriber(base);
         addSubscriber(msa);
-
+        base.setEventBus(eventBus);
+        base.instantiateLocationsAndAddThemAsSubscribers();
         base.sendPublicKey(base.getPublicKey());
+        msa.setLocations(base.getLocations());
+
+        base.getLocations()[7].doOrder();
+
     }//end constructor
 
 
     private void createInstitutions(){
         msa = new MSA();
-        base = new Base(eventBus);
-
-        msa.setLocations(base.getLocations());
+        base = new Base();
     }
 
     public void addSubscriber(Subscriber subscriber) {

@@ -16,40 +16,38 @@ public class Base extends Subscriber {
     private RSA rsa;
     private List<Drugs> oneGramDrugs;
 
-    public Base(EventBus eventBus) {
+    public Base() {
         rsa = new RSA();
-
+        eventBus = new EventBus();
         RSAKey[] keys = rsa.generateKeys(50);
         publicKey = keys[0];
         privateKey = keys[1];
-
-        this.eventBus = eventBus;
-        instantiateLocations();
-        Arrays.stream(locations).forEach(this::addSubscriber);
-
         oneGramDrugs = new ArrayList<>();
         for (int i = 0; i < (15*1000*1000); i++) {
             oneGramDrugs.add(new Drugs());
         }
 
-
-
-
-
     }//end constructor
 
-    @Subscribe
-    public void receive(EventSendPublicKey eventSendPublicKey) {
-        publicKey = eventSendPublicKey.getRsaKey();
+
+    public void instantiateLocationsAndAddThemAsSubscribers(){
+        instantiateLocations();
+        Arrays.stream(locations).forEach(this::addSubscriber);
+    }
+
+
+    public void setEventBus(EventBus eventBus) {
+        this.eventBus = eventBus;
     }
 
     @Subscribe
     public void receive(EventPlaceOrder eventPlaceOrder) {
-        System.out.println("Base: has received encrypted message from Location.");
+        System.out.println("Base has received order message from a Location.");
         BigInteger[] cipher = eventPlaceOrder.getCipher();
         String encryptedText = rsa.decrypt(cipher, privateKey);
         System.out.println("Encrypted Message is: ");
         System.out.println(encryptedText);
+
         String destination = analyseDecryptedText(encryptedText);
 
         System.out.println("Drug amount: " + oneGramDrugs.size());
@@ -62,7 +60,7 @@ public class Base extends Subscriber {
 
     @Subscribe
     private void receive(EventSendDrugs eventSendDrugs) {
-        System.out.println("Base: Received EventSendDrugs");
+        System.out.println("Base received instruction to send Drugs. Drugs will be sent.");
 
         String destination = eventSendDrugs.getDestination();
         Map<String,Integer> stringIntegerMap =  IntegerStrings.getStringIntegerMap();
@@ -70,24 +68,19 @@ public class Base extends Subscriber {
 
         List<Drugs> drugsToSend = new ArrayList<>();
         for (int i = 0; i < 100; i++) {
-            Drugs currentDrugs = oneGramDrugs.get(0);
+            Drugs currentDrugs = oneGramDrugs.get(i);
             drugsToSend.add(currentDrugs);
             oneGramDrugs.remove(currentDrugs);
         }
-
         locations[destinationIndex].addDrugs(drugsToSend);
-
         BigInteger[] encryptedMessage = rsa.encrypt("DRUGSXONEHUNDREDXSENDXTOXLOCATIONX" + destination,publicKey);
-
         sendBroadcastMessage(encryptedMessage);
-
     }
 
     public String analyseDecryptedText(String encryptedText){
         String[] substrings = encryptedText.split("X");
-
         System.out.println(Arrays.toString(substrings));
-
+        /*
         if (substrings.length != 4) {
             return null;
         }
@@ -100,17 +93,13 @@ public class Base extends Subscriber {
         if (!(substrings[3].equals("ONEHUNDRED"))) {
             return null;
         }
-
+         */
         Map<String, Integer> stringIntegerMap = IntegerStrings.getStringIntegerMap();
-
         String locationID = substrings[1];
-
         stringIntegerMap.get(locationID);
-
         if (stringIntegerMap.get(locationID) == null) {
             return null;
         }
-
         return locationID;
     }
 

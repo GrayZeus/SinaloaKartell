@@ -7,17 +7,22 @@ import java.util.Map;
 public class Application {
     public static void main(String... args){
         Network network = new Network();
-
-        Location[] locations = network.getBase().getLocations();
-
-        locations[0].doOrder();
-
+        formatOutputSeparator();
         Map<Long,String> protocolMap = network.getMsa().getProtocolOfCryptoAnalytics().getProtocolMap();
 
         for (Map.Entry<Long, String> entry:protocolMap.entrySet()
              ) {
             System.out.println("Key: " + entry.getKey() + "; Value: " + entry.getValue());
         }
+
+    }
+
+    public static void formatOutputSeparator(){
+        System.out.println();
+        System.out.println();
+        System.out.println("################################################################");
+        System.out.println();
+        System.out.println("PROTOCOL FROM MSA AFTER SUCCESSFUL CONFISCATION:");
     }
 
 

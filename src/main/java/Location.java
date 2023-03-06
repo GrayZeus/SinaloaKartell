@@ -4,6 +4,7 @@ import org.checkerframework.checker.units.qual.A;
 
 import java.lang.reflect.Method;
 import java.math.BigInteger;
+import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -16,7 +17,7 @@ public class Location extends Subscriber{
     private String deliveryRequired;
     private EventBus eventBus;
     private BigInteger[] cipher;
-    private RSA rsa = new RSA();
+    private RSA rsa;
     private List<Drugs> oneGramDrugs;
 
     public Location(String locationID, RSAKey privateKey, EventBus eventBus) {
@@ -25,6 +26,7 @@ public class Location extends Subscriber{
         this.deliveryRequired = "LOCATIONX" + locationID +  "XREQUESTXONEHUNDREDX";
         this.eventBus = eventBus;
         this.oneGramDrugs = new ArrayList<>();
+        rsa = new RSA();
     }//end constructor
 
     public void doOrder(){
@@ -32,7 +34,7 @@ public class Location extends Subscriber{
         sendOrder(cipher);
     }
 
-    public void sendOrder(BigInteger[]  message) {
+    private void sendOrder(BigInteger[] cipher) {
         eventBus.post(new EventPlaceOrder(cipher));
     }
 
@@ -51,6 +53,17 @@ public class Location extends Subscriber{
         publicKey = eventSendPublicKey.getRsaKey();
         System.out.println(publicKey);
     }
+
+    @Subscribe
+    public void receive(EventPlaceOrder eventPlaceOrder){
+        System.out.println("Order has been received! From location " + locationID + ".");
+        BigInteger[] receivedOrderCipher = eventPlaceOrder.getCipher();
+        String decryptedOrderText = rsa.decrypt(receivedOrderCipher,privateKey);
+        System.out.println("Order has been decrypted, here is the message:");
+        System.out.println(decryptedOrderText);
+
+    }
+
 
     public void addDrugs(Collection<Drugs> drugs) {
         oneGramDrugs.addAll(drugs);

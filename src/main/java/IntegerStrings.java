@@ -43,6 +43,7 @@ public class IntegerStrings {
         tempStringIntegerMap.put("FOUR",4);
         tempStringIntegerMap.put("FIVE",5);
         tempStringIntegerMap.put("SIX",6);
+        tempStringIntegerMap.put("SI",6);
         tempStringIntegerMap.put("SEVEN",7);
         tempStringIntegerMap.put("EIGHT",8);
         tempStringIntegerMap.put("NINE",9);
