@@ -14,10 +14,6 @@ public class Application {
             System.out.println("Key: " + entry.getKey() + "; Value: " + entry.getValue());
         }
 
-
-        LocalDateTime dateTime = LocalDateTime.now();
-        System.out.println(dateTime);
-
     }
 
 
